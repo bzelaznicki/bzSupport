@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run -A --watch src/server.ts",
+    "migrate": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts migrate",
+    "migratedown": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts rollback",
+    "seed": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts seed"
+  },
+  "importMap": "./import_map.json"
+}
+
