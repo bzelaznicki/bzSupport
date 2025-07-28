@@ -1,6 +1,9 @@
 import { Context } from "oak/mod.ts";
 
-export default async function logger(ctx: Context, next: () => Promise<unknown>) {
+export default async function logger(
+  ctx: Context,
+  next: () => Promise<unknown>,
+) {
   const start = Date.now();
   await next();
   const ms = Date.now() - start;

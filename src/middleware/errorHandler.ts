@@ -1,7 +1,10 @@
 import { Context } from "oak/mod.ts";
 import { HttpError } from "@utils/httpError.ts";
 
-export default async function errorHandler(ctx: Context, next: () => Promise<unknown>) {
+export default async function errorHandler(
+  ctx: Context,
+  next: () => Promise<unknown>,
+) {
   try {
     await next();
   } catch (err) {

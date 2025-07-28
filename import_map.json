@@ -9,6 +9,5 @@
     "@lib/": "./src/lib/",
     "@utils/": "./src/utils/",
     "@middleware/": "./src/middleware/"
-
   }
 }

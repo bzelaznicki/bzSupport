@@ -4,7 +4,7 @@ import {
   getNextTicketNumber,
   listTickets as dbListTickets,
 } from "@db/sqlc/tickets_sql.ts";
-import { assertUUID, assertRequired } from "@utils/validators.ts";
+import { assertRequired, assertUUID } from "@utils/validators.ts";
 
 export async function listTickets(tenantId: string) {
   return await dbListTickets(sql, { tenantId });

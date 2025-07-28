@@ -1,4 +1,4 @@
-import { Router } from "oak/mod.ts"; 
+import { Router } from "oak/mod.ts";
 import { createTicket, listTickets } from "@api/tickets/tickets.ts";
 
 const router = new Router({ prefix: "/tickets" });
