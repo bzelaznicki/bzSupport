@@ -4,10 +4,9 @@ import router from "./routes/index.ts";
 
 const app = new Application();
 
-
 app.use(async (ctx, next) => {
-    console.log(`${ctx.request.method} ${ctx.request.url}`);
-    await next();
+  console.log(`${ctx.request.method} ${ctx.request.url}`);
+  await next();
 });
 
 app.use(router.routes());

@@ -7,14 +7,14 @@ plugins:
       sha256: 287df8f6cc06377d67ad5ba02c9e0f00c585509881434d15ea8bd9fc751a9368
 
 sql:
-  - schema: "schema.sql"                  
-    queries: "src/api/**/*.sql"       
+  - schema: "schema.sql"
+    queries: "src/api/**/*.sql"
     engine: postgresql
     codegen:
       - out: "src/db/sqlc"
         plugin: ts
         options:
-          runtime: deno                   
+          runtime: deno
           driver: postgres
           emit_json_tags: true
           emit_interface: true

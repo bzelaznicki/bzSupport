@@ -1,10 +1,17 @@
 {
+  "importMap": "./import_map.json",
   "tasks": {
     "dev": "deno run -A --watch src/server.ts",
-    "migrate": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts migrate",
-    "migratedown": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts rollback",
-    "seed": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts seed"
+    "migrate:up": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts migrate",
+    "migrate:down": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts rollback",
+    "seed": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts seed",
+    "fmt": "deno fmt",
+    "lint": "deno lint"
   },
-  "importMap": "./import_map.json"
+  "lint": {
+    "exclude": [
+      "migrations",
+      "db/seeds"
+    ]
+  }
 }
-

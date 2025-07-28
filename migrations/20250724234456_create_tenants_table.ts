@@ -1,13 +1,13 @@
 import {
-    AbstractMigration,
-    Info,
-    ClientPostgreSQL,
+  AbstractMigration,
+  ClientPostgreSQL,
+  Info,
 } from "https://deno.land/x/nessie@2.0.11/mod.ts";
 
 export default class extends AbstractMigration<ClientPostgreSQL> {
-    /** Runs on migrate */
-    async up(info: Info): Promise<void> {
-        await this.client.queryArray(`
+  /** Runs on migrate */
+  async up(info: Info): Promise<void> {
+    await this.client.queryArray(`
             CREATE TABLE tenants (
                 id UUID PRIMARY KEY,
                 name TEXT NOT NULL,
@@ -82,11 +82,11 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
             );
             CREATE INDEX idx_email_message_id ON email_messages (message_id);
         `);
-    }
+  }
 
-    /** Runs on rollback */
-    async down(info: Info): Promise<void> {
-        await this.client.queryArray(`
+  /** Runs on rollback */
+  async down(info: Info): Promise<void> {
+    await this.client.queryArray(`
             DROP TABLE IF EXISTS email_messages;
             DROP TABLE IF EXISTS attachments;
             DROP TABLE IF EXISTS ticket_comments;
@@ -94,5 +94,5 @@ export default class extends AbstractMigration<ClientPostgreSQL> {
             DROP TABLE IF EXISTS users;
             DROP TABLE IF EXISTS tenants;
         `);
-    }
+  }
 }
