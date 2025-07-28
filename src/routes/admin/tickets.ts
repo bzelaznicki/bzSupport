@@ -1,4 +1,4 @@
-import { Router } from "oak/mod.ts";
+import { Router } from "oak/mod.ts"; 
 import { createTicket, listTickets } from "@api/tickets/tickets.ts";
 
 const router = new Router({ prefix: "/tickets" });
@@ -9,12 +9,13 @@ router.get("/", async (ctx) => {
 });
 
 router.post("/", async (ctx) => {
+
   const body = await ctx.request.body({ type: "json" }).value;
+
   if (!body.subject || !body.createdBy) {
-    ctx.response.status = 400;
-    ctx.response.body = { error: "subject and createdBy are required" };
-    return;
+    ctx.throw(400, "subject and createdBy are required");
   }
+
   const ticket = await createTicket(TENANT_ID, body);
   ctx.response.status = 201;
   ctx.response.body = ticket;
