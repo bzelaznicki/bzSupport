@@ -9,13 +9,7 @@ router.get("/", async (ctx) => {
 });
 
 router.post("/", async (ctx) => {
-
   const body = await ctx.request.body({ type: "json" }).value;
-
-  if (!body.subject || !body.createdBy) {
-    ctx.throw(400, "subject and createdBy are required");
-  }
-
   const ticket = await createTicket(TENANT_ID, body);
   ctx.response.status = 201;
   ctx.response.body = ticket;
