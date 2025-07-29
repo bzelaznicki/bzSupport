@@ -1,4 +1,8 @@
-import { create, verify, getNumericDate } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
+import {
+  create,
+  getNumericDate,
+  verify,
+} from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 import { unauthorized } from "./httpError.ts";
 
 export type UserRole = "admin" | "agent" | "user";
@@ -47,9 +51,10 @@ export async function signToken(
   );
 }
 
-
-
-export async function verifyToken(token: string, expectedIssuer?: string): Promise<JwtPayload> {
+export async function verifyToken(
+  token: string,
+  expectedIssuer?: string,
+): Promise<JwtPayload> {
   const key = await getKey();
   const rawPayload = await verify(token, key) as unknown;
 
@@ -72,5 +77,3 @@ export async function verifyToken(token: string, expectedIssuer?: string): Promi
 
   return rawPayload;
 }
-
-

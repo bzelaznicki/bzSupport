@@ -1,4 +1,4 @@
-import { verifyToken, JwtPayload, UserRole } from "@utils/jwt.ts";
+import { JwtPayload, UserRole, verifyToken } from "@utils/jwt.ts";
 import { unauthorized } from "@utils/httpError.ts";
 import { Context } from "oak/mod.ts";
 
