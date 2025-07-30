@@ -13,12 +13,23 @@ export function withAuth(
   handler: (ctx: Context & { state: { user: JwtPayload } }) => Promise<void>,
 ) {
   return async (ctx: Context) => {
-    const authHeader = ctx.request.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      throw unauthorized("Missing or invalid Authorization header");
+    // Try to read from cookies first
+    let token = await ctx.cookies.get("access_token");
+
+    // Fallback: read from Authorization header
+    if (!token) {
+      const authHeader = ctx.request.headers.get("Authorization");
+      if (authHeader?.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
     }
 
-    const token = authHeader.split(" ")[1];
+    // If no token, reject
+    if (!token) {
+      throw unauthorized("Missing access token");
+    }
+
+    // Verify
     const payload = await verifyToken(token, options.issuer || "bzSupport");
 
     // Role check
@@ -31,6 +42,7 @@ export function withAuth(
       throw unauthorized("Tenant mismatch");
     }
 
+    // Attach to state
     ctx.state.user = payload;
     await handler(ctx as Context & { state: { user: JwtPayload } });
   };

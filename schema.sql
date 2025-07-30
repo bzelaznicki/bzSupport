@@ -91,6 +91,22 @@ ALTER SEQUENCE public.nessie_migrations_id_seq OWNED BY public.nessie_migrations
 
 
 --
+-- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: Bartek
+--
+
+CREATE TABLE public.refresh_tokens (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_id uuid,
+    token text NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
+    revoked_at timestamp without time zone,
+    created_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.refresh_tokens OWNER TO "Bartek";
+
+--
 -- Name: tenants; Type: TABLE; Schema: public; Owner: Bartek
 --
 
@@ -212,6 +228,14 @@ ALTER TABLE ONLY public.nessie_migrations
 
 ALTER TABLE ONLY public.nessie_migrations
     ADD CONSTRAINT nessie_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: Bartek
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -344,6 +368,14 @@ ALTER TABLE ONLY public.email_messages
 
 ALTER TABLE ONLY public.email_messages
     ADD CONSTRAINT email_messages_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES public.tickets(id) ON DELETE CASCADE;
+
+
+--
+-- Name: refresh_tokens refresh_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: Bartek
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --
