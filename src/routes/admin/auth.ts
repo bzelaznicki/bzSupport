@@ -27,14 +27,14 @@ router.post("/login", async (ctx) => {
     httpOnly: true,
     secure: !config.isDev,
     sameSite: "strict",
-    expires: new Date(Date.now() + 1000 * 60 * 15),
+    expires: new Date(Date.now() + config.jwtExpirationTime),
   });
 
   ctx.cookies.set("refresh_token", refreshToken, {
     httpOnly: true,
     secure: !config.isDev,
     sameSite: "strict",
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    expires: new Date(Date.now() + config.refreshExpirationTime),
   });
 
   ctx.response.body = { userResponse };
@@ -54,14 +54,14 @@ router.post("/refresh", async (ctx) => {
         httpOnly: true,
         secure: !config.isDev,
         sameSite: "strict",
-        expires: new Date(Date.now() + 1000 * 60 * 15),
+        expires: new Date(Date.now() + config.jwtExpirationTime),
       });
 
       ctx.cookies.set("refresh_token", refreshToken, {
         httpOnly: true,
         secure: !config.isDev,
         sameSite: "strict",
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        expires: new Date(Date.now() + config.refreshExpirationTime),
       });
 
       ctx.response.body = { userResponse };

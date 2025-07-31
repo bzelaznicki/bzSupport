@@ -12,4 +12,11 @@ export const config = {
   dbUrl: requireEnv("DATABASE_URL"),
   port: parseInt(Deno.env.get("PORT") ?? "8000"),
   isDev: Deno.env.get("APP_ENV") === "dev",
+  refreshExpirationTime: parseInt(
+    Deno.env.get("REFRESH_TOKEN_EXPIRATION_TIME") ??
+      String(1000 * 60 * 60 * 24 * 30),
+  ),
+  jwtExpirationTime: parseInt(
+    Deno.env.get("JWT_EXPIRATION_TIME") ?? String(1000 * 60 * 15),
+  ),
 };
