@@ -12,6 +12,7 @@ import { unauthorized } from "@utils/httpError.ts";
 import { sql } from "@db/db.ts";
 import { generateRefreshToken } from "@utils/refreshTokens.ts";
 import { UserResponse } from "../../types/user.ts";
+import { config } from "../../config.ts";
 
 export async function loginUser(email: string, password: string) {
   const user = await getUserByEmail(sql, { email });
@@ -44,7 +45,7 @@ export async function loginUser(email: string, password: string) {
 
 export async function issueRefreshToken(userId: string): Promise<string> {
   const token = generateRefreshToken();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
+  const expiresAt = new Date(Date.now() + config.refreshExpirationTime);
 
   const args: CreateRefreshTokenArgs = {
     userId,
