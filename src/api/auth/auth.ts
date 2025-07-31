@@ -1,11 +1,17 @@
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 import { signToken } from "@utils/jwt.ts";
-import { getRefreshToken, getUserByEmail, CreateRefreshTokenArgs, createRefreshToken, revokeRefreshToken, getUserById } from "@db/sqlc/auth_sql.ts";
+import {
+  createRefreshToken,
+  CreateRefreshTokenArgs,
+  getRefreshToken,
+  getUserByEmail,
+  getUserById,
+  revokeRefreshToken,
+} from "@db/sqlc/auth_sql.ts";
 import { unauthorized } from "@utils/httpError.ts";
 import { sql } from "@db/db.ts";
 import { generateRefreshToken } from "@utils/refreshTokens.ts";
 import { UserResponse } from "../../types/user.ts";
-
 
 export async function loginUser(email: string, password: string) {
   const user = await getUserByEmail(sql, { email });
@@ -27,27 +33,27 @@ export async function loginUser(email: string, password: string) {
   const refreshToken = await issueRefreshToken(user.id);
 
   const userResponse: UserResponse = {
-      id: user.id,
-      tenantId: user.tenantId, 
-      email: user.email, 
-      role: user.role as "admin" | "agent" | "user",
-  }
+    id: user.id,
+    tenantId: user.tenantId,
+    email: user.email,
+    role: user.role as "admin" | "agent" | "user",
+  };
 
-  return {accessToken, refreshToken, userResponse}
+  return { accessToken, refreshToken, userResponse };
 }
 
 export async function issueRefreshToken(userId: string): Promise<string> {
   const token = generateRefreshToken();
-  const expiresAt = new Date(Date.now()  + 1000 * 60 * 60 * 24 * 30);
+  const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
 
   const args: CreateRefreshTokenArgs = {
     userId,
     token,
-    expiresAt
+    expiresAt,
   };
 
   await createRefreshToken(sql, args);
-  
+
   return token;
 }
 
@@ -84,7 +90,6 @@ export async function refreshUserToken(token: string, userId: string) {
 
   return { accessToken, refreshToken, userResponse };
 }
-
 
 export async function invalidateRefreshToken(token: string) {
   await revokeRefreshToken(sql, { token });
