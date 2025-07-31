@@ -3,7 +3,7 @@ import { createTicket, listTickets } from "@api/tickets/tickets.ts";
 import { withAuth } from "@middleware/withAuth.ts";
 
 const router = new Router({ prefix: "/tickets" });
-const TENANT_ID = "048ec673-12ee-498b-b1b5-fe6a1063ecbd";
+const TENANT_ID = "0da94e5b-9280-49c7-80ef-dbd54e8f16c7"; //TODO get from login context
 
 router.get(
   "/",

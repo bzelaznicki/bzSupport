@@ -6,7 +6,8 @@
     "migrate:down": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts rollback",
     "seed": "deno run -A https://raw.githubusercontent.com/halvardssm/deno-nessie/main/cli.ts seed",
     "fmt": "deno fmt",
-    "lint": "deno lint"
+    "lint": "deno lint",
+    "update-schema": "bash -c 'pg_dump --schema-only --no-owner --no-privileges -f schema.sql \"$DATABASE_URL\" && sqlc generate'"
   },
   "lint": {
     "exclude": [
