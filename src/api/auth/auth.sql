@@ -3,6 +3,11 @@ SELECT id, tenant_id, email, role, password_hash
 FROM users
 WHERE email = $1;
 
+-- name: GetUserById :one
+SELECT id, tenant_id, email, role
+FROM users
+WHERE id = $1;
+
 -- name: CreateRefreshToken :exec
 INSERT INTO refresh_tokens (user_id, token, expires_at)
 VALUES ($1, $2, $3);

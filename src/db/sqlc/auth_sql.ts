@@ -32,6 +32,36 @@ export async function getUserByEmail(sql: Sql, args: GetUserByEmailArgs): Promis
     };
 }
 
+export const getUserByIdQuery = `-- name: GetUserById :one
+SELECT id, tenant_id, email, role
+FROM users
+WHERE id = $1`;
+
+export interface GetUserByIdArgs {
+    id: string;
+}
+
+export interface GetUserByIdRow {
+    id: string;
+    tenantId: string;
+    email: string;
+    role: string;
+}
+
+export async function getUserById(sql: Sql, args: GetUserByIdArgs): Promise<GetUserByIdRow | null> {
+    const rows = await sql.unsafe(getUserByIdQuery, [args.id]).values();
+    if (rows.length !== 1) {
+        return null;
+    }
+    const row = rows[0];
+    return {
+        id: row[0],
+        tenantId: row[1],
+        email: row[2],
+        role: row[3]
+    };
+}
+
 export const createRefreshTokenQuery = `-- name: CreateRefreshToken :exec
 INSERT INTO refresh_tokens (user_id, token, expires_at)
 VALUES ($1, $2, $3)`;

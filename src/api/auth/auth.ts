@@ -1,6 +1,6 @@
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 import { signToken } from "@utils/jwt.ts";
-import { getRefreshToken, getUserByEmail, CreateRefreshTokenArgs, createRefreshToken } from "@db/sqlc/auth_sql.ts";
+import { getRefreshToken, getUserByEmail, CreateRefreshTokenArgs, createRefreshToken, revokeRefreshToken, getUserById } from "@db/sqlc/auth_sql.ts";
 import { unauthorized } from "@utils/httpError.ts";
 import { sql } from "@db/db.ts";
 import { generateRefreshToken } from "@utils/refreshTokens.ts";
@@ -59,4 +59,33 @@ export async function validateRefreshToken(token: string) {
   if (rt.revokedAt !== null || new Date(rt.expiresAt) < new Date()) return null;
 
   return rt;
+}
+
+export async function refreshUserToken(token: string, userId: string) {
+  await invalidateRefreshToken(token);
+  const user = await getUserById(sql, { id: userId });
+
+  if (!user) throw unauthorized("User not found");
+
+  const accessToken = await signToken(
+    user.id,
+    user.role as "admin" | "agent" | "user",
+    user.tenantId,
+  );
+
+  const refreshToken = await issueRefreshToken(user.id);
+
+  const userResponse: UserResponse = {
+    id: user.id,
+    tenantId: user.tenantId,
+    email: user.email,
+    role: user.role as "admin" | "agent" | "user",
+  };
+
+  return { accessToken, refreshToken, userResponse };
+}
+
+
+export async function invalidateRefreshToken(token: string) {
+  await revokeRefreshToken(sql, { token });
 }
