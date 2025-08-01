@@ -10,6 +10,7 @@ function requireEnv(key: string): string {
 export const config = {
   appEnv: requireEnv("APP_ENV"),
   dbUrl: requireEnv("DATABASE_URL"),
+  jwtSecret: requireEnv("JWT_SECRET"),
   port: parseInt(Deno.env.get("PORT") ?? "8000"),
   isDev: Deno.env.get("APP_ENV") === "dev",
   refreshExpirationTime: parseInt(

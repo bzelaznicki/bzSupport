@@ -1,5 +1,5 @@
 import { Router } from "oak/mod.ts";
-import { badRequest } from "@utils/httpError.ts";
+import { assertEmail, assertPassword } from "@utils/validators.ts";
 import {
   invalidateRefreshToken,
   loginUser,
@@ -7,15 +7,16 @@ import {
 } from "@api/auth/auth.ts";
 import { config } from "../../config.ts";
 import { withRefreshAuth } from "@middleware/withRefreshAuth.ts";
+import { rateLimit } from "@middleware/rateLimit.ts";
 
 const router = new Router({ prefix: "/auth" });
 
-router.post("/login", async (ctx) => {
+router.post("/login", rateLimit(5, 15 * 60 * 1000), async (ctx) => {
   const { email, password } = await ctx.request.body({ type: "json" }).value;
 
-  if (!email || !password) {
-    throw badRequest("Email and password are required");
-  }
+  // Validate input
+  assertEmail(email);
+  assertPassword(password);
 
   const { accessToken, refreshToken, userResponse } = await loginUser(
     email,
@@ -40,7 +41,7 @@ router.post("/login", async (ctx) => {
   ctx.response.body = { userResponse };
 });
 
-router.post("/refresh", async (ctx) => {
+router.post("/refresh", rateLimit(10, 5 * 60 * 1000), async (ctx) => {
   await withRefreshAuth(
     ctx as typeof ctx & { state: { refreshToken: string; userId: string } },
     async () => {

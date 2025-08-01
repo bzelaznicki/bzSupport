@@ -3,10 +3,14 @@ import { Application } from "oak/mod.ts";
 import router from "./routes/index.ts";
 import errorHandler from "@middleware/errorHandler.ts";
 import logger from "@middleware/logger.ts";
+import { securityHeaders } from "@middleware/securityHeaders.ts";
+import { validateContentType } from "@middleware/validateContentType.ts";
 
 const app = new Application();
 
 // --- Middleware ---
+app.use(securityHeaders);
+app.use(validateContentType());
 app.use(errorHandler);
 app.use(logger);
 

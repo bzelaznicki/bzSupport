@@ -1,5 +1,6 @@
 import "https://deno.land/std@0.224.0/dotenv/load.ts";
 import postgres from "postgres";
+import { config } from "../config.ts";
 
 const databaseUrl = Deno.env.get("DATABASE_URL") ??
   `postgres://${Deno.env.get("DB_USER") ?? "postgres"}:${
@@ -9,7 +10,7 @@ const databaseUrl = Deno.env.get("DATABASE_URL") ??
   }/${Deno.env.get("DB_NAME") ?? "ticketing"}`;
 
 export const sql = postgres(databaseUrl, {
-  ssl: false,
+  ssl: config.isDev ? false : "require",
 });
 const safeUrl = databaseUrl.replace(/:(.*?)@/, ":****@");
 console.log(`Connected to DB at ${safeUrl}`);
