@@ -4,6 +4,7 @@ import {
   verify,
 } from "https://deno.land/x/djwt@v3.0.2/mod.ts";
 import { unauthorized } from "./httpError.ts";
+import { config } from "../config.ts";
 
 export type UserRole = "admin" | "agent" | "user";
 
@@ -19,10 +20,9 @@ let cachedKey: CryptoKey | null = null;
 
 async function getKey(): Promise<CryptoKey> {
   if (cachedKey) return cachedKey;
-  const secret = Deno.env.get("JWT_SECRET") || "dev-secret";
   cachedKey = await crypto.subtle.importKey(
     "raw",
-    new TextEncoder().encode(secret),
+    new TextEncoder().encode(config.jwtSecret),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign", "verify"],
